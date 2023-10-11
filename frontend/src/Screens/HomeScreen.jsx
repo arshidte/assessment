@@ -1,32 +1,29 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getQuestions } from "../Slices/questionSlice";
+import { postAnswers } from "../Slices/answerSlice";
 
 const HomeScreen = () => {
-  const [questions, setQuestions] = useState([]);
+  // const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
 
   const { userInfo } = useSelector((state) => state.login);
   const { userInfo: userInfoAuth } = useSelector((state) => state.auth);
+  const questions = useSelector((state) => state.questions);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!userInfo && !userInfoAuth) {
       navigate("/login");
     } else {
-      axios
-        .get("/api/questions")
-        .then((response) => {
-          setQuestions(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching questions:", error);
-        });
+      dispatch(getQuestions());
     }
-  }, [userInfo, userInfoAuth, axios]);
+  }, [userInfo, userInfoAuth, dispatch]);
 
   const handleAnswerSelection = (questionId, answer) => {
     // Create an object representing the answer for the current question
@@ -46,23 +43,26 @@ const HomeScreen = () => {
     setAnswers(updatedAnswers);
   };
 
-  const handleSubmitAnswers = () => {
+  const handleSubmitAnswers = (e) => {
+    e.preventDefault();
     let userId;
-    if(userInfo != null){
+    if (userInfo != null) {
       userId = userInfo._id;
-    }else{
+    } else {
       userId = userInfoAuth._id;
     }
-    console.log(answers);
-    axios
-      .post("/api/questions/submit", { userId, answers })
-      .then((response) => {
-        alert('Submitted successfully');
-      })
-      .catch((error) => {
-        alert('Some error occured. Make sure you are not submitted before!');
-        console.error("Error submitting answers:", error);
-      });
+    dispatch(postAnswers({ userId, answers }));
+    navigate('/summary');
+    // axios
+    //   .post("/api/questions/submit", { userId, answers })
+    //   .then((response) => {
+    //     navigate("/summary");
+    //   })
+    //   .catch((error) => {
+    //     alert("Some error occured. Make sure you are not submitted before!");
+    //     console.error("Error submitting answers:", error);
+    //   });
+
   };
 
   return (

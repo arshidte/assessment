@@ -25,11 +25,9 @@ const RegisterScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-        // Dispatch the registerUser action
+
         await dispatch(registerUser({ name, email, password }));
-  
-        // After successful registration, immediately log in the user
-        // await dispatch(loginUser({ email, password }));
+
       } catch (error) {
         console.error('Registration error:', error);
       }

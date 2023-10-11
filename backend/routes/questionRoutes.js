@@ -32,10 +32,26 @@ router.post(
 
     const saveAns = await UserQn.create({ userId, answeredQuestions: answers });
 
+    console.log(saveAns);
+
     if(saveAns){
-        res.json({saveAns});
+        res.json(saveAns);
     }
 
+  })
+);
+
+router.get(
+  "/getsummary",
+  asyncHandler(async (req, res) => {
+    const { userId } = req.body;
+    const answersById = await UserQn.findOne({ userId });
+    if (answersById) {
+      res.json(answersById);
+    } else {
+      res.status(404);
+      throw new Error("Resource not found!");
+    }
   })
 );
 

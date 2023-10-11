@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Row, Col, Form, Container } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { useLoginMutation } from "../Slices/userSlice";
-// import { setUser } from "../Slices/authSlice";
-// import { toast } from "react-toastify";
+
 import { loginUser } from "../Slices/userSlice";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -13,13 +11,11 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //   const [login, { isLoading }] = useLoginMutation();
+
 
   const { userInfo } = useSelector((state) => state.login);
 
-  //   const { search } = useLocation();
-  //   const sp = new URLSearchParams(search);
-  //   const redirect = sp.get("redirect") || "/";
+
   const { userInfo: userInfoAuth } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -28,16 +24,6 @@ const LoginScreen = () => {
     }
   }, [userInfo, navigate, userInfoAuth]);
 
-  //   const submitHandler = async (e) => {
-  //     e.preventDefault();
-  //     try {
-  //       const res = await login({ email, password }).unwrap();
-  //       dispatch(setUser({ ...res }));
-  //       navigate(redirect);
-  //     } catch (error) {
-  //       toast.error(error?.data?.message || error.error);
-  //     }
-  //   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
